@@ -12,10 +12,11 @@ import bleach
 
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
+app.config['SECRET_KEY'] = 'SET A KEY'
 ckeditor = CKEditor(app)
 Bootstrap(app)
 
+# Need a link to use postgres SQL database with heroku
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
@@ -174,9 +175,9 @@ def contact():
 
 
 @app.route('/post/<id>.html', methods=["GET", "POST"])
-def post(id):
+def post(post_id):
     all_posts = db.session.query(BlogPost).all()
-    current_post = all_posts[int(id)-1]
+    current_post = all_posts[int(post_id)-1]
     comment_form = CommentForm()
     if request.method == "POST":
         if not current_user.is_authenticated:
@@ -184,9 +185,9 @@ def post(id):
             return redirect(url_for("login"))
 
         new_comment = Comment(
-            text = request.form.get("body"),
-            author = current_user,
-            post = current_post
+            text=request.form.get("body"),
+            author=current_user,
+            post=current_post
         )
 
         db.session.add(new_comment)
