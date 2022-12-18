@@ -197,6 +197,7 @@ def post(id):
 
 @app.route('/register', methods=["GET", "POST"])
 def register():
+    '''Added some documentation'''
     register_form = RegisterForm()
     if request.method == "POST":
         user = User.query.filter_by(email=request.form.get("email")).first()
